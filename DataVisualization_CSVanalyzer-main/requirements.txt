@@ -1,0 +1,8 @@
+Flask==3.0.0
+# Use modern wheels compatible with Python 3.13 (no compiler needed)
+numpy>=2.0.0
+pandas>=2.2.0
+matplotlib==3.8.2
+seaborn==0.13.0
+Werkzeug==3.0.1
+gunicorn==21.2.0

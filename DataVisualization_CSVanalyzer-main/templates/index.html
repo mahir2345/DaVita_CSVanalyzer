@@ -1,0 +1,1756 @@
+<!DOCTYPE html>
+<!--
+    DaVita - AI-Powered Data Intelligence Platform
+    
+    Original base structure: DataViz CSV Analyzer (unknown author)
+    
+    Enhanced and Transformed by: Mahir
+    Copyright (c) 2026 Mahir. All Rights Reserved.
+    
+    Major Enhancements & Transformations:
+    - Complete UI/UX redesign with purple/violet glassmorphism theme
+    - AI-powered correlation analysis using Google Gemini
+    - Intelligent null-value handling with correlation preservation
+    - AI explanations and recommendations system
+    - Advanced particle effects and animations
+    - Modern responsive design with heavy visual effects
+    - Renamed and rebranded as DaVita
+    
+    This enhanced version constitutes a derivative work with substantial
+    original contributions. The enhancements and AI features are the
+    intellectual property of Mahir.
+-->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DaVita - AI Data Analyzer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            overflow-x: hidden;
+            background: linear-gradient(135deg, #0f0517 0%, #1a0a2e 50%, #16082a 100%);
+            color: #fff;
+            min-height: 100vh;
+        }
+
+        /* Animated Gradient Background */
+        .background {
+            position: fixed;
+            width: 100vw;
+            height: 100vh;
+            top: 0;
+            left: 0;
+            z-index: -2;
+            background: linear-gradient(135deg, #0f0517, #1a0a2e, #2d1b4e, #1a0a2e, #0f0517);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Floating Orbs */
+        .orbs-container {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.6;
+            animation: floatOrb 20s infinite ease-in-out;
+        }
+
+        .orb-1 {
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.5), transparent 70%);
+            top: -200px;
+            left: -200px;
+            animation-delay: 0s;
+        }
+
+        .orb-2 {
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(236, 72, 153, 0.4), transparent 70%);
+            top: 50%;
+            right: -150px;
+            animation-delay: -5s;
+        }
+
+        .orb-3 {
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.4), transparent 70%);
+            bottom: -100px;
+            left: 30%;
+            animation-delay: -10s;
+        }
+
+        .orb-4 {
+            width: 350px;
+            height: 350px;
+            background: radial-gradient(circle, rgba(167, 139, 250, 0.5), transparent 70%);
+            top: 40%;
+            left: 10%;
+            animation-delay: -7s;
+        }
+
+        @keyframes floatOrb {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            25% { transform: translate(50px, -80px) scale(1.1); }
+            50% { transform: translate(-30px, 50px) scale(0.95); }
+            75% { transform: translate(80px, 30px) scale(1.05); }
+        }
+
+        /* Particle Stars */
+        .stars {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .star {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 3s infinite ease-in-out;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.2; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.5); }
+        }
+
+        /* Header */
+        header {
+            background: rgba(15, 5, 23, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid rgba(139, 92, 246, 0.2);
+            box-shadow: 0 4px 30px rgba(139, 92, 246, 0.1);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo-icon {
+            width: 55px;
+            height: 55px;
+            background: linear-gradient(135deg, #8b5cf6, #ec4899, #6366f1);
+            background-size: 200% 200%;
+            animation: logoGradient 3s ease infinite, logoPulse 2s ease-in-out infinite;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 26px;
+            box-shadow: 0 0 30px rgba(139, 92, 246, 0.5), 0 0 60px rgba(236, 72, 153, 0.3);
+        }
+
+        @keyframes logoGradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes logoPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .logo h1 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #c4b5fd, #f0abfc, #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.5px;
+        }
+
+        .header-stats {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 0.75rem 1.25rem;
+            background: rgba(139, 92, 246, 0.1);
+            border-radius: 16px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .stat-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(139, 92, 246, 0.3);
+            border-color: rgba(139, 92, 246, 0.4);
+        }
+
+        .stat-value {
+            font-size: 1.6rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #a78bfa, #f0abfc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.6);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        /* Glass Card Base */
+        .glass-card {
+            background: rgba(30, 15, 50, 0.6);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 24px;
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.1), transparent);
+            animation: shimmer 4s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        /* Upload Section */
+        .upload-section {
+            padding: 3rem;
+            margin-bottom: 2rem;
+        }
+
+        .upload-title {
+            font-size: 3rem;
+            text-align: center;
+            margin-bottom: 0.75rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #c4b5fd, #f0abfc, #818cf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: titleGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes titleGlow {
+            0%, 100% { filter: drop-shadow(0 0 20px rgba(139, 92, 246, 0.5)); }
+            50% { filter: drop-shadow(0 0 40px rgba(236, 72, 153, 0.7)); }
+        }
+
+        .upload-subtitle {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 2.5rem;
+            font-size: 1.1rem;
+            font-weight: 300;
+        }
+
+        .upload-area {
+            border: 2px dashed rgba(139, 92, 246, 0.4);
+            border-radius: 20px;
+            padding: 4rem 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            background: rgba(139, 92, 246, 0.05);
+            overflow: hidden;
+        }
+
+        .upload-area::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.2), transparent 70%);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: all 0.6s ease;
+        }
+
+        .upload-area:hover::before {
+            width: 600px;
+            height: 600px;
+        }
+
+        .upload-area:hover {
+            border-color: #a78bfa;
+            transform: translateY(-5px);
+            box-shadow: 0 20px 60px rgba(139, 92, 246, 0.3);
+        }
+
+        .upload-area.dragover {
+            border-color: #ec4899;
+            background: rgba(236, 72, 153, 0.1);
+            transform: scale(1.02);
+        }
+
+        .upload-icon {
+            font-size: 5rem;
+            margin-bottom: 1.5rem;
+            animation: floatIcon 3s ease-in-out infinite;
+            position: relative;
+            z-index: 1;
+        }
+
+        @keyframes floatIcon {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            25% { transform: translateY(-15px) rotate(-5deg); }
+            75% { transform: translateY(-15px) rotate(5deg); }
+        }
+
+        .upload-text {
+            font-size: 1.4rem;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            position: relative;
+            z-index: 1;
+        }
+
+        .upload-subtext {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.95rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        /* Strategy Select */
+        .strategy-section {
+            margin-top: 2rem;
+            text-align: center;
+        }
+
+        .strategy-label {
+            display: block;
+            margin-bottom: 0.75rem;
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .strategy-select {
+            padding: 1rem 1.5rem;
+            border-radius: 14px;
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            background: rgba(30, 15, 50, 0.8);
+            color: #fff;
+            width: 100%;
+            max-width: 400px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%238b5cf6'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 1.5rem;
+        }
+
+        .strategy-select:focus {
+            outline: none;
+            border-color: #a78bfa;
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
+        }
+
+        .strategy-select option {
+            background: #1a0a2e;
+            color: #fff;
+        }
+
+        .strategy-hint {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+        }
+
+        /* Buttons */
+        .button-group {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 1rem 2.5rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #8b5cf6, #ec4899);
+            color: white;
+            box-shadow: 0 10px 40px rgba(139, 92, 246, 0.4);
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn-primary:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 15px 50px rgba(139, 92, 246, 0.5);
+        }
+
+        .btn-secondary {
+            background: rgba(139, 92, 246, 0.15);
+            color: #c4b5fd;
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            box-shadow: 0 5px 20px rgba(139, 92, 246, 0.2);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(139, 92, 246, 0.25);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(139, 92, 246, 0.3);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        /* Messages */
+        .message {
+            border-radius: 14px;
+            padding: 1rem 1.5rem;
+            margin: 1.5rem 0;
+            text-align: center;
+            display: none;
+            animation: slideIn 0.4s ease;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .message.active { display: block; }
+
+        .success-message {
+            background: rgba(34, 197, 94, 0.15);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            color: #86efac;
+        }
+
+        .error-message {
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #fca5a5;
+        }
+
+        .warning-message {
+            background: rgba(234, 179, 8, 0.15);
+            border: 1px solid rgba(234, 179, 8, 0.3);
+            color: #fde047;
+        }
+
+        /* Recommendations Panel */
+        .recommendations-panel {
+            display: none;
+            background: rgba(34, 197, 94, 0.08);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+            border: 1px solid rgba(34, 197, 94, 0.2);
+        }
+
+        .recommendations-panel.active { display: block; }
+
+        .recommendations-panel h3 {
+            color: #86efac;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .recommendations-content {
+            color: rgba(255, 255, 255, 0.85);
+            line-height: 1.7;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        /* Processing Section */
+        .processing-container {
+            display: none;
+            text-align: center;
+            padding: 5rem 2rem;
+        }
+
+        .processing-container.active { display: block; }
+
+        .loader {
+            width: 140px;
+            height: 140px;
+            margin: 0 auto 2.5rem;
+            position: relative;
+        }
+
+        .loader-ring {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border: 4px solid transparent;
+            border-radius: 50%;
+            animation: spin 1.5s linear infinite;
+        }
+
+        .loader-ring:nth-child(1) {
+            border-top-color: #8b5cf6;
+            animation-duration: 1.5s;
+        }
+
+        .loader-ring:nth-child(2) {
+            border-right-color: #ec4899;
+            animation-duration: 2s;
+            animation-direction: reverse;
+        }
+
+        .loader-ring:nth-child(3) {
+            border-bottom-color: #6366f1;
+            animation-duration: 2.5s;
+        }
+
+        .loader-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 2.5rem;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+            50% { opacity: 0.6; transform: translate(-50%, -50%) scale(0.9); }
+        }
+
+        .processing-text {
+            font-size: 1.6rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            background: linear-gradient(135deg, #c4b5fd, #f0abfc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .processing-status {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 1rem;
+            animation: fadeInOut 2s ease-in-out infinite;
+        }
+
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        /* Results Section */
+        .results-section {
+            display: none;
+        }
+
+        .results-section.active { display: block; }
+
+        .results-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .results-title {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #c4b5fd, #f0abfc, #818cf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1.25rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .stat-card {
+            padding: 1.75rem;
+            text-align: center;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+
+        .stat-card::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 24px;
+            padding: 1px;
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.5), rgba(236, 72, 153, 0.5));
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .stat-card:hover::after {
+            opacity: 1;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 50px rgba(139, 92, 246, 0.3);
+        }
+
+        .stat-card-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.75rem;
+            animation: bounceIcon 2s ease-in-out infinite;
+        }
+
+        @keyframes bounceIcon {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        .stat-card-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #a78bfa, #f0abfc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-card-label {
+            color: rgba(255, 255, 255, 0.6);
+            margin-top: 0.5rem;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        /* Insights Grid */
+        .insights-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .insight-card {
+            padding: 1.5rem;
+        }
+
+        .insight-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #c4b5fd;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .insight-body {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .chip {
+            display: inline-block;
+            padding: 0.35rem 0.85rem;
+            border-radius: 999px;
+            background: rgba(139, 92, 246, 0.15);
+            border: 1px solid rgba(139, 92, 246, 0.25);
+            color: #c4b5fd;
+            font-size: 0.8rem;
+            margin: 0.25rem;
+            transition: all 0.3s ease;
+        }
+
+        .chip:hover {
+            background: rgba(139, 92, 246, 0.25);
+            transform: translateY(-2px);
+        }
+
+        .insight-list {
+            list-style: none;
+            margin-top: 0.75rem;
+        }
+
+        .insight-list li {
+            margin-bottom: 0.5rem;
+            padding-left: 1rem;
+            position: relative;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .insight-list li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0.6rem;
+            width: 6px;
+            height: 6px;
+            background: linear-gradient(135deg, #8b5cf6, #ec4899);
+            border-radius: 50%;
+        }
+
+        /* AI Insights Section */
+        .ai-insights-section {
+            padding: 2rem;
+            margin-bottom: 2rem;
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(236, 72, 153, 0.05));
+        }
+
+        .ai-insights-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .ai-icon {
+            width: 55px;
+            height: 55px;
+            background: linear-gradient(135deg, #8b5cf6, #ec4899);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            animation: pulse 2s ease-in-out infinite;
+            box-shadow: 0 0 30px rgba(139, 92, 246, 0.4);
+        }
+
+        .ai-insights-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #c4b5fd, #f0abfc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .ai-content {
+            background: rgba(15, 5, 23, 0.5);
+            border-radius: 16px;
+            padding: 1.75rem;
+            line-height: 1.8;
+            color: rgba(255, 255, 255, 0.9);
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .ai-content::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .ai-content::-webkit-scrollbar-track {
+            background: rgba(139, 92, 246, 0.1);
+            border-radius: 4px;
+        }
+
+        .ai-content::-webkit-scrollbar-thumb {
+            background: rgba(139, 92, 246, 0.3);
+            border-radius: 4px;
+        }
+
+        .ai-content h1, .ai-content h2, .ai-content h3 {
+            color: #c4b5fd;
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .ai-content h1:first-child, .ai-content h2:first-child {
+            margin-top: 0;
+        }
+
+        .ai-content strong {
+            color: #f0abfc;
+        }
+
+        .ai-content code {
+            background: rgba(139, 92, 246, 0.2);
+            padding: 0.2rem 0.5rem;
+            border-radius: 6px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9em;
+        }
+
+        .ai-loading {
+            text-align: center;
+            padding: 3rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .ai-error {
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 12px;
+            padding: 1.25rem;
+            color: #fca5a5;
+        }
+
+        /* Plots Grid */
+        .plots-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .plot-card {
+            padding: 1.5rem;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .plot-card:hover {
+            transform: translateY(-10px) scale(1.01);
+            box-shadow: 0 25px 60px rgba(139, 92, 246, 0.3);
+        }
+
+        .plot-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .plot-title {
+            font-size: 1.15rem;
+            font-weight: 600;
+            background: linear-gradient(135deg, #c4b5fd, #f0abfc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .download-btn {
+            background: linear-gradient(135deg, #8b5cf6, #6366f1);
+            color: white;
+            border: none;
+            padding: 0.6rem 1.5rem;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 20px rgba(139, 92, 246, 0.3);
+        }
+
+        .download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(139, 92, 246, 0.4);
+        }
+
+        .plot-image {
+            width: 100%;
+            border-radius: 12px;
+            transition: transform 0.4s ease;
+        }
+
+        .plot-card:hover .plot-image {
+            transform: scale(1.03);
+        }
+
+        /* Animations */
+        .fade-in {
+            animation: fadeInUp 0.6s ease forwards;
+            opacity: 0;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-stats { display: none; }
+            .plots-grid { grid-template-columns: 1fr; }
+            .logo h1 { font-size: 1.6rem; }
+            .upload-title { font-size: 2rem; }
+            .results-title { font-size: 2rem; }
+            .button-group { flex-direction: column; align-items: center; }
+            .btn { width: 100%; max-width: 300px; justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="background"></div>
+    <div class="orbs-container">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+        <div class="orb orb-4"></div>
+    </div>
+    <div class="stars" id="stars"></div>
+
+    <!-- Header -->
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <div class="logo-icon">🧬</div>
+                <h1>DaVita</h1>
+            </div>
+            <div class="header-stats">
+                <div class="stat-item">
+                    <div class="stat-value" id="visualizations-count">15+</div>
+                    <div class="stat-label">Visualizations</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value" id="files-processed">0</div>
+                    <div class="stat-label">Analyzed</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Upload Section -->
+        <div class="upload-section glass-card" id="uploadSection">
+            <h2 class="upload-title">Transform Data Into Intelligence</h2>
+            <p class="upload-subtitle">Upload your CSV and let AI reveal hidden patterns, correlations, and insights</p>
+            
+            <div class="upload-area" id="uploadArea">
+                <div class="upload-icon">📊</div>
+                <div class="upload-text">Drop your CSV file here</div>
+                <div class="upload-subtext">or click to browse (Max 16MB)</div>
+                <input type="file" id="fileInput" class="file-input" accept=".csv">
+            </div>
+
+            <div class="strategy-section">
+                <label for="nullStrategy" class="strategy-label">
+                    Missing Value Strategy (AI-Optimized)
+                </label>
+                <select id="nullStrategy" class="strategy-select">
+                    <option value="auto">Auto - Preserve Correlations</option>
+                    <option value="mean">Mean (numeric) + Mode (categorical)</option>
+                    <option value="median">Median (numeric) + Mode (categorical)</option>
+                    <option value="mode">Mode for all columns</option>
+                    <option value="ffill">Forward Fill</option>
+                    <option value="bfill">Backward Fill</option>
+                    <option value="drop_rows">Drop rows with missing values</option>
+                </select>
+                <div class="strategy-hint">AI will select the best strategy to preserve data integrity</div>
+            </div>
+            
+            <div class="button-group">
+                <button class="btn btn-secondary" id="recommendBtn" disabled>
+                    🤖 Get AI Recommendations
+                </button>
+                <button class="btn btn-primary" id="analyzeBtn" disabled>
+                    ✨ Analyze Data
+                </button>
+            </div>
+
+            <div class="recommendations-panel" id="recommendationsPanel">
+                <h3>🤖 AI Recommendations</h3>
+                <div class="recommendations-content" id="recommendationsContent"></div>
+            </div>
+
+            <div class="message warning-message" id="apiWarning">
+                ⚠️ Gemini API key not configured. Set GEMINI_API_KEY environment variable to enable AI features.
+            </div>
+
+            <div class="message success-message" id="successMessage">
+                ✓ File ready for analysis!
+            </div>
+            <div class="message error-message" id="errorMessage"></div>
+        </div>
+
+        <!-- Processing Section -->
+        <div class="processing-container glass-card" id="processingContainer">
+            <div class="loader">
+                <div class="loader-ring"></div>
+                <div class="loader-ring"></div>
+                <div class="loader-ring"></div>
+                <div class="loader-center">🧬</div>
+            </div>
+            <div class="processing-text">Analyzing Your Data...</div>
+            <div class="processing-status" id="processingStatus">Initializing AI engine</div>
+        </div>
+
+        <!-- Results Section -->
+        <div class="results-section" id="resultsSection">
+            <div class="results-header">
+                <h2 class="results-title">Analysis Complete</h2>
+            </div>
+
+            <!-- Statistics Grid -->
+            <div class="stats-grid" id="statsGrid"></div>
+
+            <!-- Insights Grid -->
+            <div class="insights-grid" id="insightsGrid">
+                <div class="insight-card glass-card" id="nullHandlingCard"></div>
+                <div class="insight-card glass-card" id="correlationCard"></div>
+            </div>
+
+            <!-- AI Insights Section -->
+            <div class="ai-insights-section glass-card" id="aiInsightsSection">
+                <div class="ai-insights-header">
+                    <div class="ai-icon">🤖</div>
+                    <h2 class="ai-insights-title">AI-Powered Analysis</h2>
+                </div>
+                <div class="ai-content" id="aiContent">
+                    <div class="ai-loading">
+                        <div style="font-size: 3rem; margin-bottom: 1rem;">🔮</div>
+                        <div>AI is analyzing your data...</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Custom Plot Builder -->
+            <div class="glass-card" id="customPlotSection" style="margin-top: 2rem; padding: 2rem; display: none;">
+                <div class="insight-title">🎯 Build Your Own Plot</div>
+                <div class="insight-body">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
+                        <div>
+                            <label for="customPlotType" class="strategy-label" style="text-align:left;">Plot type</label>
+                            <select id="customPlotType" class="strategy-select">
+                                <option value="histogram">Histogram (1 numeric column)</option>
+                                <option value="line">Line (1 numeric column)</option>
+                                <option value="scatter">Scatter (X &amp; Y numeric)</option>
+                                <option value="box">Box (numeric by category)</option>
+                                <option value="bar">Bar (mean numeric by category)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="customX" class="strategy-label" style="text-align:left;">X / Category column</label>
+                            <select id="customX" class="strategy-select"></select>
+                        </div>
+                        <div>
+                            <label for="customY" class="strategy-label" style="text-align:left;">Y column (for 2‑axis plots)</label>
+                            <select id="customY" class="strategy-select"></select>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" id="customPlotBtn">
+                        📈 Generate Custom Plot
+                    </button>
+                    <div id="customPlotError" class="message error-message" style="margin-top:1rem;"></div>
+                    <div id="customPlotResult" style="margin-top: 1.5rem;"></div>
+                </div>
+            </div>
+
+            <!-- Focus Column Relationships -->
+            <div class="glass-card" id="focusSection" style="margin-top: 2rem; padding: 2rem; display: none;">
+                <div class="insight-title">🎯 Focus Column Relationships</div>
+                <div class="insight-body">
+                    <div style="display: flex; flex-wrap: wrap; gap: 1rem; align-items: flex-end; margin-bottom: 1.5rem;">
+                        <div style="flex: 1; min-width: 220px;">
+                            <label for="focusColumn" class="strategy-label" style="text-align:left;">Select focus column</label>
+                            <select id="focusColumn" class="strategy-select"></select>
+                        </div>
+                        <button class="btn btn-secondary" id="focusAnalyzeBtn" style="min-width: 200px;">
+                            🔍 Analyze Relationships
+                        </button>
+                    </div>
+                    <div id="focusError" class="message error-message" style="margin-top:0;"></div>
+                    <div id="focusSummary" style="margin: 1rem 0; color: rgba(255,255,255,0.8);"></div>
+                    <div id="focusResults"></div>
+                </div>
+            </div>
+
+            <!-- Plots Grid -->
+            <div class="plots-grid" id="plotsGrid"></div>
+        </div>
+    </div>
+
+    <script>
+        // Create star particles
+        function createStars() {
+            const starsContainer = document.getElementById('stars');
+            for (let i = 0; i < 100; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.animationDelay = Math.random() * 3 + 's';
+                star.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                starsContainer.appendChild(star);
+            }
+        }
+        createStars();
+
+        // File upload handling
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+        const analyzeBtn = document.getElementById('analyzeBtn');
+        const recommendBtn = document.getElementById('recommendBtn');
+        const nullStrategySelect = document.getElementById('nullStrategy');
+        const successMessage = document.getElementById('successMessage');
+        const errorMessage = document.getElementById('errorMessage');
+        const apiWarning = document.getElementById('apiWarning');
+        let selectedFile = null;
+        let geminiConfigured = false;
+
+        // Check API status on load
+        async function checkApiStatus() {
+            try {
+                const response = await fetch('/api/status');
+                const data = await response.json();
+                geminiConfigured = data.gemini_configured;
+                if (!geminiConfigured) {
+                    apiWarning.classList.add('active');
+                }
+            } catch (e) {
+                console.error('Failed to check API status:', e);
+            }
+        }
+        checkApiStatus();
+
+        uploadArea.addEventListener('click', () => fileInput.click());
+
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) handleFile(files[0]);
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) handleFile(e.target.files[0]);
+        });
+
+        function handleFile(file) {
+            if (!file.name.endsWith('.csv')) {
+                showError('Please select a CSV file');
+                return;
+            }
+            if (file.size > 16 * 1024 * 1024) {
+                showError('File size must be less than 16MB');
+                return;
+            }
+            
+            selectedFile = file;
+            analyzeBtn.disabled = false;
+            recommendBtn.disabled = false;
+            successMessage.classList.add('active');
+            errorMessage.classList.remove('active');
+            document.getElementById('recommendationsPanel').classList.remove('active');
+            
+            uploadArea.querySelector('.upload-text').textContent = `📄 ${file.name}`;
+            uploadArea.querySelector('.upload-subtext').textContent = `${(file.size / 1024 / 1024).toFixed(2)} MB`;
+        }
+
+        // Get AI recommendations
+        recommendBtn.addEventListener('click', async () => {
+            if (!selectedFile) return;
+            
+            recommendBtn.disabled = true;
+            recommendBtn.textContent = '🔄 Analyzing...';
+            
+            const formData = new FormData();
+            formData.append('file', selectedFile);
+            
+            try {
+                const response = await fetch('/get-recommendations', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    const panel = document.getElementById('recommendationsPanel');
+                    const content = document.getElementById('recommendationsContent');
+                    
+                    let html = `<div style="margin-bottom: 1rem;"><strong>Total Missing Values:</strong> ${data.total_missing}</div>`;
+                    
+                    if (Object.keys(data.missing_by_column).length > 0) {
+                        html += '<div style="margin-bottom: 1rem;"><strong>Missing by Column:</strong></div>';
+                        html += '<div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem;">';
+                        for (const [col, info] of Object.entries(data.missing_by_column)) {
+                            html += `<span class="chip">${col}: ${info.count} (${info.percentage}%)</span>`;
+                        }
+                        html += '</div>';
+                    }
+                    
+                    if (data.ai_recommendations) {
+                        html += '<hr style="border-color: rgba(34, 197, 94, 0.3); margin: 1rem 0;">';
+                        html += formatMarkdown(data.ai_recommendations);
+                    } else if (!geminiConfigured) {
+                        html += '<div class="ai-error">AI recommendations not available. Configure GEMINI_API_KEY to enable.</div>';
+                    }
+                    
+                    content.innerHTML = html;
+                    panel.classList.add('active');
+                } else {
+                    showError(data.error || 'Failed to get recommendations');
+                }
+            } catch (error) {
+                showError(error.message);
+            } finally {
+                recommendBtn.disabled = false;
+                recommendBtn.textContent = '🤖 Get AI Recommendations';
+            }
+        });
+
+        function showError(message) {
+            errorMessage.textContent = '✗ ' + message;
+            errorMessage.classList.add('active');
+            successMessage.classList.remove('active');
+        }
+
+        function formatMarkdown(text) {
+            if (!text) return '';
+            let html = text
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;');
+            
+            html = html.replace(/^### (.*$)/gm, '<h3>$1</h3>');
+            html = html.replace(/^## (.*$)/gm, '<h2>$1</h2>');
+            html = html.replace(/^# (.*$)/gm, '<h1>$1</h1>');
+            html = html.replace(/\*\*\*(.*?)\*\*\*/g, '<strong><em>$1</em></strong>');
+            html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            html = html.replace(/\*(.*?)\*/g, '<em>$1</em>');
+            html = html.replace(/`(.*?)`/g, '<code>$1</code>');
+            html = html.replace(/^\s*[-*]\s+(.*$)/gm, '<li>$1</li>');
+            html = html.replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>');
+            html = html.replace(/^\s*\d+\.\s+(.*$)/gm, '<li>$1</li>');
+            html = html.replace(/\n\n/g, '</p><p>');
+            html = html.replace(/\n/g, '<br>');
+            html = '<p>' + html + '</p>';
+            html = html.replace(/<p><\/p>/g, '');
+            html = html.replace(/<p><br><\/p>/g, '');
+            return html;
+        }
+
+        // Analyze button
+        analyzeBtn.addEventListener('click', async () => {
+            if (!selectedFile) return;
+
+            const uploadSection = document.getElementById('uploadSection');
+            const processingContainer = document.getElementById('processingContainer');
+            const resultsSection = document.getElementById('resultsSection');
+            const nullStrategy = nullStrategySelect.value;
+
+            uploadSection.style.display = 'none';
+            processingContainer.classList.add('active');
+            resultsSection.classList.remove('active');
+
+            const formData = new FormData();
+            formData.append('file', selectedFile);
+            formData.append('null_strategy', nullStrategy);
+
+            const statusMessages = [
+                'Reading your data...',
+                'Computing statistics...',
+                'Analyzing correlations...',
+                'Generating visualizations...',
+                'Running AI analysis...',
+                'Preparing insights...'
+            ];
+
+            let messageIndex = 0;
+            const statusInterval = setInterval(() => {
+                document.getElementById('processingStatus').textContent = statusMessages[messageIndex];
+                messageIndex = (messageIndex + 1) % statusMessages.length;
+            }, 2000);
+
+            try {
+                const response = await fetch('/analyze', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+                clearInterval(statusInterval);
+
+                if (data.success) {
+                    displayResults(data);
+                    const counter = document.getElementById('files-processed');
+                    counter.textContent = parseInt(counter.textContent) + 1;
+                } else {
+                    throw new Error(data.error || 'Analysis failed');
+                }
+            } catch (error) {
+                clearInterval(statusInterval);
+                processingContainer.classList.remove('active');
+                uploadSection.style.display = 'block';
+                showError(error.message);
+            }
+        });
+
+        function displayResults(data) {
+            const processingContainer = document.getElementById('processingContainer');
+            const resultsSection = document.getElementById('resultsSection');
+            const statsGrid = document.getElementById('statsGrid');
+            const plotsGrid = document.getElementById('plotsGrid');
+            const nullHandlingCard = document.getElementById('nullHandlingCard');
+            const correlationCard = document.getElementById('correlationCard');
+            const aiContent = document.getElementById('aiContent');
+
+            processingContainer.classList.remove('active');
+            resultsSection.classList.add('active');
+
+            // Display statistics
+            statsGrid.innerHTML = `
+                <div class="stat-card glass-card fade-in" style="animation-delay: 0.1s">
+                    <div class="stat-card-icon">📊</div>
+                    <div class="stat-card-value">${data.stats.rows.toLocaleString()}</div>
+                    <div class="stat-card-label">Total Rows</div>
+                </div>
+                <div class="stat-card glass-card fade-in" style="animation-delay: 0.15s">
+                    <div class="stat-card-icon">📋</div>
+                    <div class="stat-card-value">${data.stats.columns}</div>
+                    <div class="stat-card-label">Columns</div>
+                </div>
+                <div class="stat-card glass-card fade-in" style="animation-delay: 0.2s">
+                    <div class="stat-card-icon">🔢</div>
+                    <div class="stat-card-value">${data.stats.numeric_cols}</div>
+                    <div class="stat-card-label">Numeric</div>
+                </div>
+                <div class="stat-card glass-card fade-in" style="animation-delay: 0.25s">
+                    <div class="stat-card-icon">📝</div>
+                    <div class="stat-card-value">${data.stats.categorical_cols}</div>
+                    <div class="stat-card-label">Categorical</div>
+                </div>
+                <div class="stat-card glass-card fade-in" style="animation-delay: 0.3s">
+                    <div class="stat-card-icon">❓</div>
+                    <div class="stat-card-value">${data.stats.missing_values_before}</div>
+                    <div class="stat-card-label">Missing (Before)</div>
+                </div>
+                <div class="stat-card glass-card fade-in" style="animation-delay: 0.35s">
+                    <div class="stat-card-icon">✅</div>
+                    <div class="stat-card-value">${data.stats.missing_values_after}</div>
+                    <div class="stat-card-label">Missing (After)</div>
+                </div>
+            `;
+
+            // Null-handling summary
+            const perColumn = data.null_handling.per_column || {};
+            const columnChips = Object.entries(perColumn).map(
+                ([col, count]) => `<span class="chip">${col}: ${count}</span>`
+            ).join('') || '<span style="color: rgba(255,255,255,0.6);">No missing values detected</span>';
+
+            nullHandlingCard.innerHTML = `
+                <div class="insight-title">🔧 Missing Value Strategy</div>
+                <div class="insight-body">
+                    <div><strong>Strategy Used:</strong> ${data.null_handling.strategy_used}</div>
+                    <div style="margin-top:0.5rem; color: rgba(255,255,255,0.7);">${data.null_handling.reason}</div>
+                    <div style="margin-top:1rem;"><strong>Columns Affected:</strong></div>
+                    <div style="margin-top:0.5rem;">${columnChips}</div>
+                </div>
+            `;
+
+            // Correlation insights + full matrix
+            if (data.correlation_insights && data.correlation_insights.length > 0) {
+                const insightItems = data.correlation_insights.map(
+                    (item) => `<li><strong>${item.pair}</strong> — ${item.direction} (${item.strength}), r = ${item.value}</li>`
+                ).join('');
+
+                let matrixHtml = '';
+                if (data.correlation_matrix && data.correlation_matrix.columns.length > 0) {
+                    const cm = data.correlation_matrix;
+                    matrixHtml += '<div style="margin-top:1rem;"><strong>Correlation matrix (numeric columns)</strong></div>';
+                    matrixHtml += '<div style="overflow-x:auto; max-height:320px; margin-top:0.5rem;"><table style="border-collapse:collapse; width:100%; font-size:0.8rem;">';
+                    matrixHtml += '<thead><tr><th style="padding:4px; border-bottom:1px solid rgba(148, 163, 184, 0.5); text-align:left;">Col</th>';
+                    cm.columns.forEach(col => {
+                        matrixHtml += `<th style="padding:4px; border-bottom:1px solid rgba(148, 163, 184, 0.5); text-align:right;">${col}</th>`;
+                    });
+                    matrixHtml += '</tr></thead><tbody>';
+                    cm.data.forEach((row, i) => {
+                        matrixHtml += '<tr>';
+                        matrixHtml += `<td style="padding:4px; border-bottom:1px solid rgba(30, 41, 59, 0.7); text-align:left;">${cm.columns[i]}</td>`;
+                        row.forEach(val => {
+                            const display = (val === null || isNaN(val)) ? '' : Number(val).toFixed(2);
+                            matrixHtml += `<td style="padding:4px; border-bottom:1px solid rgba(30, 41, 59, 0.7); text-align:right;">${display}</td>`;
+                        });
+                        matrixHtml += '</tr>';
+                    });
+                    matrixHtml += '</tbody></table></div>';
+                }
+
+                correlationCard.innerHTML = `
+                    <div class="insight-title">🔗 Top Correlations</div>
+                    <div class="insight-body">
+                        <div>Strongest relationships discovered:</div>
+                        <ul class="insight-list">${insightItems}</ul>
+                        ${matrixHtml}
+                    </div>
+                `;
+            } else {
+                correlationCard.innerHTML = `
+                    <div class="insight-title">🔗 Correlations</div>
+                    <div class="insight-body">Not enough numeric columns for correlation analysis.</div>
+                `;
+            }
+
+            // AI Explanation (now always local & free)
+            if (data.ai_explanation && data.ai_explanation.success && data.ai_explanation.explanation) {
+                aiContent.innerHTML = formatMarkdown(data.ai_explanation.explanation);
+            } else if (data.ai_explanation && data.ai_explanation.error) {
+                aiContent.innerHTML = `
+                    <div class="ai-error">
+                        <strong>AI Analysis Issue</strong><br>
+                        ${data.ai_explanation.error}
+                    </div>
+                `;
+            } else {
+                aiContent.innerHTML = `<div class="ai-error">AI explanation not available.</div>`;
+            }
+
+            // Display plots
+            plotsGrid.innerHTML = '';
+            data.plots.forEach((plot, index) => {
+                const plotCard = document.createElement('div');
+                plotCard.className = 'plot-card glass-card fade-in';
+                plotCard.style.animationDelay = (0.1 * (index + 1)) + 's';
+                plotCard.innerHTML = `
+                    <div class="plot-header">
+                        <div class="plot-title">${plot[0]}</div>
+                        <button class="download-btn" onclick="downloadPlot('${plot[1]}')">
+                            Download
+                        </button>
+                    </div>
+                    <img src="/static/outputs/${plot[1]}" alt="${plot[0]}" class="plot-image">
+                `;
+                plotsGrid.appendChild(plotCard);
+            });
+
+            // Enable custom plot builder with column info
+            setupCustomPlotControls(data);
+
+            // Enable focus column analysis
+            setupFocusControls(data);
+
+            resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        function downloadPlot(filename) {
+            window.location.href = `/download/${filename}`;
+        }
+
+        async function generateCustomPlot(plotType, xCol, yCol) {
+            if (!selectedFile) return;
+
+            const errorBox = document.getElementById('customPlotError');
+            errorBox.classList.remove('active');
+
+            const formData = new FormData();
+            formData.append('file', selectedFile);
+            formData.append('null_strategy', nullStrategySelect.value);
+            formData.append('plot_type', plotType);
+            if (xCol) formData.append('x_col', xCol);
+            if (yCol) formData.append('y_col', yCol);
+
+            const btn = document.getElementById('customPlotBtn');
+            const originalText = btn.textContent;
+            btn.disabled = true;
+            btn.textContent = '🔄 Generating...';
+
+            try {
+                const response = await fetch('/custom-plot', {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await response.json();
+
+                if (!data.success) {
+                    throw new Error(data.error || 'Custom plot failed');
+                }
+
+                const container = document.getElementById('customPlotResult');
+                container.innerHTML = `
+                    <div class="plot-card glass-card" style="margin-top: 1rem;">
+                        <div class="plot-header">
+                            <div class="plot-title">${data.title}</div>
+                            <button class="download-btn" onclick="downloadPlot('${data.filename}')">
+                                Download
+                            </button>
+                        </div>
+                        <img src="/static/outputs/${data.filename}" alt="${data.title}" class="plot-image">
+                    </div>
+                `;
+            } catch (e) {
+                errorBox.textContent = '✗ ' + e.message;
+                errorBox.classList.add('active');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = originalText;
+            }
+        }
+
+        function setupCustomPlotControls(data) {
+            const section = document.getElementById('customPlotSection');
+            const xSelect = document.getElementById('customX');
+            const ySelect = document.getElementById('customY');
+            const typeSelect = document.getElementById('customPlotType');
+
+            if (!section || !xSelect || !ySelect || !typeSelect) return;
+
+            const cols = data.columns || { all: [], numeric: [], categorical: [], datetime: [], boolean: [] };
+
+            const addOptions = (select, options, placeholder) => {
+                select.innerHTML = '';
+                const opt = document.createElement('option');
+                opt.value = '';
+                opt.textContent = placeholder;
+                select.appendChild(opt);
+                options.forEach(col => {
+                    const o = document.createElement('option');
+                    o.value = col;
+                    o.textContent = col;
+                    select.appendChild(o);
+                });
+            };
+
+            // Initial population
+            addOptions(xSelect, cols.numeric.length ? cols.numeric : cols.all, 'Select X / category column');
+            addOptions(ySelect, cols.numeric, 'Select Y column');
+
+            typeSelect.addEventListener('change', () => {
+                const type = typeSelect.value;
+                if (type === 'histogram' || type === 'line') {
+                    addOptions(xSelect, cols.numeric.length ? cols.numeric : cols.all, 'Select numeric column');
+                    addOptions(ySelect, [], 'Not required');
+                } else if (type === 'scatter') {
+                    addOptions(xSelect, cols.numeric, 'Select X (numeric)');
+                    addOptions(ySelect, cols.numeric, 'Select Y (numeric)');
+                } else if (type === 'box' || type === 'bar') {
+                    // prefer categorical/boolean for grouping
+                    const groupCols = (cols.categorical && cols.categorical.length) ? cols.categorical
+                        : ((cols.boolean && cols.boolean.length) ? cols.boolean : cols.all);
+                    addOptions(xSelect, groupCols, 'Select category (X)');
+                    addOptions(ySelect, cols.numeric, 'Select numeric (Y)');
+                }
+            });
+
+            document.getElementById('customPlotBtn').onclick = () => {
+                const type = typeSelect.value;
+                const xCol = xSelect.value;
+                const yCol = ySelect.value || null;
+                generateCustomPlot(type, xCol, yCol);
+            };
+
+            section.style.display = 'block';
+        }
+
+        async function runFocusAnalysis(focusCol) {
+            if (!selectedFile || !focusCol) return;
+
+            const errorBox = document.getElementById('focusError');
+            const summaryBox = document.getElementById('focusSummary');
+            const resultsBox = document.getElementById('focusResults');
+            const btn = document.getElementById('focusAnalyzeBtn');
+
+            errorBox.classList.remove('active');
+            summaryBox.textContent = '';
+            resultsBox.innerHTML = '';
+
+            const formData = new FormData();
+            formData.append('file', selectedFile);
+            formData.append('null_strategy', nullStrategySelect.value);
+            formData.append('focus_col', focusCol);
+
+            const originalText = btn.textContent;
+            btn.disabled = true;
+            btn.textContent = '🔄 Analyzing...';
+
+            try {
+                const response = await fetch('/focus-analysis', {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await response.json();
+
+                if (!data.success) {
+                    throw new Error(data.error || 'Focus analysis failed');
+                }
+
+                summaryBox.textContent = data.summary || '';
+
+                if (!data.relationships || data.relationships.length === 0) {
+                    resultsBox.innerHTML = '<div style="color: rgba(255,255,255,0.7);">No strong relationships could be computed for this column.</div>';
+                    return;
+                }
+
+                if (data.focus_type === 'numeric') {
+                    // Table of correlations
+                    let html = '<table style="border-collapse:collapse; width:100%; font-size:0.9rem;">';
+                    html += '<thead><tr>';
+                    html += '<th style="text-align:left; padding:6px; border-bottom:1px solid rgba(148,163,184,0.5);">Other column</th>';
+                    html += '<th style="text-align:right; padding:6px; border-bottom:1px solid rgba(148,163,184,0.5);">Correlation (r)</th>';
+                    html += '</tr></thead><tbody>';
+                    data.relationships.forEach(rel => {
+                        html += '<tr>';
+                        html += `<td style="padding:6px; border-bottom:1px solid rgba(30,41,59,0.7);">${rel.other_column}</td>`;
+                        html += `<td style="padding:6px; border-bottom:1px solid rgba(30,41,59,0.7); text-align:right;">${rel.value.toFixed(3)}</td>`;
+                        html += '</tr>';
+                    });
+                    html += '</tbody></table>';
+                    resultsBox.innerHTML = html;
+                } else {
+                    // Categorical focus: for each numeric column, show chips of mean per category
+                    let html = '';
+                    data.relationships.forEach(rel => {
+                        html += `<div style="margin-bottom:1.25rem;">`;
+                        html += `<div style="font-weight:600; margin-bottom:0.5rem; color:#c4b5fd;">${rel.other_column}</div>`;
+                        html += '<div style="display:flex; flex-wrap:wrap; gap:0.4rem;">';
+                        rel.values.forEach(v => {
+                            html += `<span class="chip">${v.category}: ${v.mean_value}</span>`;
+                        });
+                        html += '</div></div>';
+                    });
+                    resultsBox.innerHTML = html;
+                }
+            } catch (e) {
+                errorBox.textContent = '✗ ' + e.message;
+                errorBox.classList.add('active');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = originalText;
+            }
+        }
+
+        function setupFocusControls(data) {
+            const section = document.getElementById('focusSection');
+            const focusSelect = document.getElementById('focusColumn');
+            const btn = document.getElementById('focusAnalyzeBtn');
+
+            if (!section || !focusSelect || !btn) return;
+
+            const cols = data.columns || { all: [], numeric: [], categorical: [], datetime: [], boolean: [] };
+            focusSelect.innerHTML = '';
+
+            const opt = document.createElement('option');
+            opt.value = '';
+            opt.textContent = 'Select focus column';
+            focusSelect.appendChild(opt);
+
+            (cols.all || []).forEach(col => {
+                const o = document.createElement('option');
+                o.value = col;
+                o.textContent = col;
+                focusSelect.appendChild(o);
+            });
+
+            btn.onclick = () => {
+                const focusCol = focusSelect.value;
+                runFocusAnalysis(focusCol);
+            };
+
+            section.style.display = 'block';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,48 @@
+MIT License
+
+Copyright (c) 2026 Mahir
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+---
+
+DERIVATIVE WORK NOTICE:
+
+DaVita is a derivative work based on DataViz CSV Analyzer with substantial 
+original contributions and enhancements.
+
+Original Base Work: DataViz CSV Analyzer
+Original Copyright (c) 2026 Amir Sakib Saad (MIT License)
+
+Enhanced and Transformed by: Mahir
+Copyright (c) 2026 Mahir. All Rights Reserved.
+
+Major Enhancements & Original Contributions (Copyright Mahir 2026):
+- AI-powered data analysis using Google Gemini
+- Intelligent correlation-aware null-value handling
+- AI explanation and recommendation system
+- Automated imputation strategy selection
+- Complete UI/UX redesign with purple/violet glassmorphism theme
+- Advanced particle effects and animation system
+- Real-time data quality assessment
+- DaVita branding and identity
+
+These enhancements constitute substantial original work and are the 
+intellectual property of Mahir. The derivative work is licensed under 
+the MIT License as stated above.
